@@ -4,68 +4,73 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Catálogo de piezas impresas en 3D | RA Xtrude Manufactura</title>
-  <meta name="description" content="Modelos de diseño propio impresos en 3D en Parral, Chihuahua: hogar, oficina, gaming, jardín, automotriz y taller. Pide por WhatsApp.">
+  <meta name="description" content="Modelos de diseño propio impresos en 3D en Chihuahua, Chihuahua: hogar, oficina, gaming, jardín, automotriz y taller. Pide por WhatsApp.">
   <meta property="og:title" content="Catálogo RA Xtrude Manufactura">
-  <meta property="og:description" content="Piezas impresas en 3D en Parral, Chihuahua. Pide por WhatsApp.">
+  <meta property="og:description" content="Piezas impresas en 3D en Chihuahua, Chihuahua. Pide por WhatsApp.">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#0F1C2E">
+  <meta name="theme-color" content="#FFFFFF">
   <link rel="icon" type="image/png" href="marca/favicon.png">
   <link rel="apple-touch-icon" href="marca/icono-180.png">
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <a class="saltar" href="#rejilla">Ir al catálogo</a>
+  <a class="saltar" href="#galeria">Ir al catálogo</a>
 
-  <header class="barra">
-    <div class="envoltura barra-interior">
-      <span aria-hidden="true"></span>
-      <a class="marca" href="#"><img class="marca-logo" src="marca/logo.png" alt="RA Xtrude Manufactura" width="306" height="120"></a>
-      <a class="btn btn-borde" id="wa-barra" target="_blank" rel="noopener">WhatsApp</a>
+  <header class="topbar">
+    <div class="topbar-interior">
+      <nav class="ruta" aria-label="Ruta">
+        <a href="#"><img src="marca/favicon.png" alt="">RA Xtrude</a>
+        <span class="ruta-sep">/</span>
+        <span class="actual ruta-pagina">Catálogo</span>
+        <span class="ruta-sep s2" id="ruta-sep-cat" hidden>/</span>
+        <span class="actual" id="ruta-cat" hidden></span>
+      </nav>
+      <a class="topbar-accion" id="wa-barra" target="_blank" rel="noopener"><span class="solo-ancho">Escríbenos por </span>WhatsApp</a>
     </div>
   </header>
 
-  <main>
-    <section class="intro">
-      <div class="envoltura">
-        <h1>Catálogo de piezas impresas en&nbsp;3D</h1>
-        <p class="intro-texto" id="intro-texto"></p>
+  <div class="portada">
+    <img src="marca/logo.png" alt="RA Xtrude Manufactura" width="306" height="120">
+  </div>
+
+  <main class="pagina">
+    <h1 class="titulo">Catálogo de piezas impresas en 3D</h1>
+    <div class="propiedades" id="propiedades"></div>
+
+    <div class="callout">
+      <span class="callout-icono" aria-hidden="true">💡</span>
+      <p id="intro-texto"></p>
+    </div>
+
+    <section class="db" aria-labelledby="db-titulo">
+      <h2 id="db-titulo">Modelos</h2>
+      <div class="vistas" id="categorias" role="group" aria-label="Categorías"></div>
+      <div class="db-herramientas">
         <div class="buscador">
           <label for="buscar" class="solo-lector">Buscar en el catálogo</label>
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
-          <input id="buscar" type="search" placeholder="Busca maceta, soporte, organizador…" autocomplete="off">
+          <input id="buscar" type="search" placeholder="Buscar maceta, soporte, organizador…" autocomplete="off">
         </div>
+        <p class="conteo" id="conteo" aria-live="polite"></p>
       </div>
-    </section>
-
-    <nav class="categorias" aria-label="Categorías">
-      <div class="envoltura categorias-interior" id="categorias"></div>
-    </nav>
-
-    <section class="envoltura catalogo" aria-labelledby="conteo">
-      <p class="conteo" id="conteo" aria-live="polite"></p>
-      <div class="rejilla" id="rejilla"></div>
+      <div class="galeria" id="galeria"></div>
       <div class="vacio" id="vacio" hidden>
-        <p>No hay modelos que coincidan con tu búsqueda.</p>
+        <p>Ningún modelo coincide con tu búsqueda.</p>
         <button class="btn btn-borde" id="limpiar" type="button">Ver todo el catálogo</button>
       </div>
     </section>
 
-    <section class="medida">
-      <div class="envoltura medida-interior">
-        <div>
-          <h2>¿Buscas algo que no está aquí?</h2>
-          <p>Diseñamos e imprimimos piezas a la medida: refacciones, soportes, adaptadores y piezas técnicas en nylon con fibra de carbono o vidrio. Mándanos una foto o las medidas y te cotizamos.</p>
-        </div>
-        <a class="btn btn-lleno" id="wa-medida" target="_blank" rel="noopener">Cotizar una pieza a la medida</a>
-      </div>
-    </section>
+    <div class="callout callout-azul">
+      <span class="callout-icono" aria-hidden="true">🛠️</span>
+      <h2>¿Buscas algo que no está aquí?</h2>
+      <p>Diseñamos e imprimimos piezas a la medida: refacciones, soportes, adaptadores y piezas técnicas en nylon con fibra de carbono o de vidrio. Mándanos una foto o las medidas y te cotizamos.</p>
+      <a class="btn btn-lleno" id="wa-medida" target="_blank" rel="noopener">Cotizar una pieza a la medida</a>
+    </div>
   </main>
 
   <footer class="pie">
-    <div class="envoltura pie-interior">
-      <p id="pie-texto"></p>
-      <p class="pie-redes" id="pie-redes"></p>
-    </div>
+    <p id="pie-texto"></p>
+    <p id="pie-redes"></p>
   </footer>
 
   <dialog id="detalle" aria-labelledby="d-titulo">
@@ -73,29 +78,15 @@
       <button class="d-cerrar" type="button" id="d-cerrar" aria-label="Cerrar">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
-      <div class="d-galeria">
+      <div class="d-portada">
         <div class="d-foto"><img id="d-img" alt=""></div>
         <div class="d-miniaturas" id="d-mini"></div>
       </div>
       <div class="d-info">
-        <p class="cat" id="d-cat"></p>
+        <p class="d-ruta" id="d-ruta"></p>
         <h2 id="d-titulo"></h2>
-        <p class="precio" id="d-precio"></p>
         <p class="d-desc" id="d-desc"></p>
-
-        <fieldset class="opciones" id="d-materiales">
-          <legend>Material</legend>
-          <div class="chips" id="d-mat-chips"></div>
-          <p class="opcion-nota" id="d-mat-nota"></p>
-        </fieldset>
-
-        <fieldset class="opciones" id="d-colores">
-          <legend>Color</legend>
-          <div class="chips" id="d-col-chips"></div>
-        </fieldset>
-
-        <dl class="ficha ficha-detalle" id="d-ficha"></dl>
-
+        <div class="props" id="d-props"></div>
         <div class="d-pedido">
           <a class="btn btn-lleno btn-ancho" id="d-wa" target="_blank" rel="noopener">Pedir por WhatsApp</a>
           <p class="d-nota">Te confirmamos precio final y fecha de entrega por mensaje.</p>
