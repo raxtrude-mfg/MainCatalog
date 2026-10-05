@@ -10,8 +10,10 @@ window.CATALOGO = {
   negocio: {
     nombre: "RA Xtrude Manufactura",
     ciudad: "Hidalgo del Parral, Chihuahua",
-    // Número con código de país, sin espacios ni signos: 52 + 1 + 10 dígitos
-    whatsapp: "5216270000000",
+    // Número con código de país, sin espacios ni signos: 52 + 10 dígitos
+    whatsapp: "526271138127",
+    // Código de tu cuenta en goatcounter.com para contar visitas (ej. "raxtrude"). Vacío = sin contador
+    goatcounter: "",
     instagram: "", // ej. "https://instagram.com/raxtrude"
     facebook: ""
   },

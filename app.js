@@ -29,6 +29,26 @@ function iniciar() {
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const wa = (texto) => `https://wa.me/${negocio.whatsapp}?text=${encodeURIComponent(texto)}`;
 
+  /* ---------- Contador de visitas (GoatCounter) ---------- */
+  const pendientes = [];
+  let contadorListo = false;
+  function contar(datos) {
+    if (!negocio.goatcounter) return;
+    if (!contadorListo) { pendientes.push(datos); return; }
+    try { window.goatcounter.count(datos); } catch (e) { /* sin contador */ }
+  }
+  if (negocio.goatcounter) {
+    const g = document.createElement("script");
+    g.async = true;
+    g.src = "https://gc.zgo.at/count.js";
+    g.dataset.goatcounter = `https://${negocio.goatcounter}.goatcounter.com/count`;
+    g.onload = () => {
+      contadorListo = !!(window.goatcounter && window.goatcounter.count);
+      pendientes.splice(0).forEach(contar);
+    };
+    document.head.appendChild(g);
+  }
+
   // Imagen provisional para modelos sin foto
   const provisional = (() => {
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'>
@@ -37,7 +57,7 @@ function iniciar() {
       <rect width='400' height='300' fill='url(#c)'/>
       <g fill='none' stroke='#4C9AFF' stroke-width='2.5' stroke-linejoin='round' transform='translate(200 138)'>
       <path d='M0 -56 L50 -28 L50 28 L0 56 L-50 28 L-50 -28 Z'/><path d='M-50 -28 L0 0 L50 -28 M0 0 L0 56'/></g>
-      <text x='200' y='250' text-anchor='middle' font-family='Arial, sans-serif' font-size='15' fill='#7890AA'>Foto próximamente</text></svg>`;
+      <text x='200' y='250' text-anchor='middle' font-family='Times New Roman, Times, serif' font-style='italic' font-size='17' fill='#7890AA'>Foto próximamente</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   })();
   const imagenes = (m) => (m.imagenes && m.imagenes.length ? m.imagenes : [provisional]);
@@ -47,7 +67,9 @@ function iniciar() {
     `Modelos de diseño propio, impresos en ${negocio.ciudad}. Elige tu pieza, el material y el color, y haz tu pedido por WhatsApp.`;
   $("#wa-barra").href = wa(`Hola, vi el catálogo de ${negocio.nombre} y tengo una pregunta.`);
   $("#wa-medida").href = wa("Hola, quiero cotizar una pieza a la medida. Te mando foto y medidas:");
-  $("#pie-texto").textContent = `© ${new Date().getFullYear()} ${negocio.nombre} · ${negocio.ciudad}`;
+  $("#pie-texto").textContent = `© ${new Date().getFullYear()} ${negocio.nombre}, ${negocio.ciudad}`;
+  $("#wa-barra").addEventListener("click", () => contar({ path: "whatsapp-general", title: "WhatsApp (encabezado)", event: true }));
+  $("#wa-medida").addEventListener("click", () => contar({ path: "cotizar-a-la-medida", title: "Cotizar pieza a la medida", event: true }));
   const redes = [];
   if (negocio.instagram) redes.push(`<a href="${esc(negocio.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
   if (negocio.facebook) redes.push(`<a href="${esc(negocio.facebook)}" target="_blank" rel="noopener">Facebook</a>`);
@@ -195,6 +217,7 @@ function iniciar() {
     actualizarPedido();
     document.title = `${m.nombre} | ${negocio.nombre}`;
     if (!dialogo.open) dialogo.showModal();
+    contar({ path: `/modelo/${m.id}`, title: m.nombre });
     dialogo.querySelector(".d-info").scrollTop = 0;
   }
 
@@ -208,6 +231,10 @@ function iniciar() {
     actualizarPedido();
   });
   $("#d-cerrar").addEventListener("click", () => dialogo.close());
+  $("#d-wa").addEventListener("click", () => {
+    const m = estado.abierto;
+    if (m) contar({ path: `pedido/${m.id}`, title: `Pedido: ${m.nombre}`, event: true });
+  });
   dialogo.addEventListener("click", (e) => {
     if (e.target === dialogo) dialogo.close();
   });

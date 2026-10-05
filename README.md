@@ -16,7 +16,7 @@ Para verlo en tu computadora, abre `index.html` con doble clic. No necesita serv
 
 ## Antes de publicar
 
-1. En `modelos.js`, cambia `whatsapp` por tu número real: `521` + 10 dígitos, sin espacios.
+1. El número de WhatsApp ya está configurado (`526271138127`). Se cambia desde el panel, en Categorías y datos.
 2. Reemplaza los modelos de ejemplo por los tuyos.
 3. Si tienes Instagram o Facebook, pega las ligas en `instagram` y `facebook`.
 
@@ -34,6 +34,18 @@ Desde el panel puedes agregar, editar, ocultar y eliminar modelos, subir fotos d
 El token se guarda solo en el navegador donde lo pegaste. Si pierdes el celular o la compu, bórralo en GitHub (misma pantalla donde lo creaste) y genera otro.
 
 Nota: el panel reescribe `modelos.js` completo al publicar, así que los comentarios de ejemplo de ese archivo desaparecen. Es normal.
+
+## Contador de visitas
+
+El sitio cuenta visitas con GoatCounter (gratis, sin cookies). Para activarlo:
+
+1. Crea una cuenta en https://www.goatcounter.com y elige un código, por ejemplo `raxtrude`.
+2. En GoatCounter, entra a **Settings** y activa **Allow adding visitor counts on your website**.
+3. En el panel, en **Categorías y datos**, escribe el código en el campo de GoatCounter y publica.
+
+La pestaña **Visitas** del panel muestra las visitas totales, cuántas veces se abrió cada modelo y cuántos clics hubo en "Pedir por WhatsApp". El tablero de GoatCounter tiene el detalle por día, de dónde llega la gente y desde qué dispositivo.
+
+Tus propias visitas no se cuentan en los navegadores donde abriste el panel (la casilla está en la pestaña Visitas).
 
 ## Agregar un modelo a mano (sin panel)
 
