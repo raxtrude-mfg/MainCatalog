@@ -56,7 +56,7 @@ function iniciar() {
       <rect width='400' height='300' fill='#E4EEFA'/>
       <g fill='none' stroke='#8FAAD0' stroke-width='2.5' stroke-linejoin='round' transform='translate(200 135)'>
       <path d='M0 -50 L44 -25 L44 25 L0 50 L-44 25 L-44 -25 Z'/><path d='M-44 -25 L0 0 L44 -25 M0 0 L0 50'/></g>
-      <text x='200' y='240' text-anchor='middle' font-family='Times New Roman, Times, serif' font-style='italic' font-size='17' fill='#55708F'>Foto próximamente</text></svg>`;
+      <text x='200' y='240' text-anchor='middle' font-family='IBM Plex Sans, Arial, sans-serif' font-size='15' fill='#55708F'>Foto próximamente</text></svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   })();
   const imagenes = (m) => (m.imagenes && m.imagenes.length ? m.imagenes : [provisional]);

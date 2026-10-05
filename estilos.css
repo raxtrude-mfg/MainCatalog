@@ -18,12 +18,12 @@
   --marino-texto: #B9C7DA;
   --sombra: rgba(15, 15, 15, .05) 0 0 0 1px, rgba(15, 15, 15, .1) 0 3px 6px, rgba(15, 15, 15, .2) 0 9px 24px;
 
-  --display: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", serif;
-  --texto: "Times New Roman", Times, "Liberation Serif", "Nimbus Roman", serif;
-  --t-titulo: clamp(2.4rem, 5.5vw, 3.4rem);  /* título de página */
+  --display: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --texto: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --t-titulo: clamp(2.2rem, 5vw, 3.1rem);    /* título de página */
   --t-seccion: clamp(1.6rem, 3vw, 1.9rem);   /* encabezados */
-  --t-pieza: 1.22rem;                         /* nombre en tarjeta */
-  --t-cuerpo: 1.125rem;                       /* párrafos */
+  --t-pieza: 1.12rem;                         /* nombre en tarjeta */
+  --t-cuerpo: 1.0625rem;                      /* párrafos */
   --t-apoyo: 1rem;                            /* botones y etiquetas */
   --t-nota: .875rem;                          /* letra chica */
 
@@ -35,10 +35,10 @@
 }
 *, *::before, *::after { box-sizing: inherit; }
 html { scroll-padding-top: calc(60px + env(safe-area-inset-top, 0px)); }
-body { margin: 0; background: var(--fondo); color: var(--tinta); font: 400 var(--t-cuerpo)/1.6 var(--texto); -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font: 400 var(--t-cuerpo)/1.55 var(--texto); -webkit-font-smoothing: antialiased; }
 img { max-width: 100%; display: block; }
 [hidden] { display: none !important; }
-h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.15; margin: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.15; letter-spacing: -.015em; margin: 0; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
 .envoltura { width: min(1180px, 100% - 2.5rem); margin-inline: auto; }
@@ -49,7 +49,7 @@ a { color: inherit; }
 /* Botones */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  font: 700 var(--t-apoyo)/1 var(--texto); text-decoration: none; cursor: pointer;
+  font: 600 var(--t-apoyo)/1 var(--texto); text-decoration: none; cursor: pointer;
   padding: .7rem 1.1rem; border-radius: var(--radio); border: 1px solid var(--azul);
   transition: background-color .12s;
 }
@@ -75,11 +75,11 @@ a { color: inherit; }
 .chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .chips span {
   display: inline-block; padding: .3rem .65rem; border-radius: var(--radio);
-  background: #E3E2E0; color: #32302C; font: 400 var(--t-apoyo)/1.2 var(--texto);
+  background: #E3E2E0; color: #32302C; font: 400 .95rem/1.2 var(--texto);
   box-shadow: inset 0 0 0 1px transparent;
 }
 .chips label:hover span { background: #D9D8D5; }
-.chips input:checked + span { background: #D3E5EF; color: #183347; font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--azul); }
+.chips input:checked + span { background: #D3E5EF; color: #183347; font-weight: 600; box-shadow: inset 0 0 0 1.5px var(--azul); }
 .chips input:focus-visible + span { outline: 2px solid var(--azul); outline-offset: 2px; }
 
 /* ===================== Catálogo ===================== */
@@ -102,7 +102,7 @@ a { color: inherit; }
 
 /* Página: columna centrada al estilo Notion */
 .pagina { width: min(1000px, 100% - 2.5rem); margin: 0 auto; padding: 2.75rem 0 4rem; text-align: center; }
-.titulo { font-size: var(--t-titulo); line-height: 1.1; margin-bottom: 1rem; }
+.titulo { font-size: var(--t-titulo); line-height: 1.1; letter-spacing: -.02em; margin-bottom: 1rem; }
 .propiedades { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem 1.4rem; color: var(--tenue); font-size: var(--t-apoyo); margin-bottom: 1.6rem; }
 .propiedades span { display: inline-flex; align-items: center; gap: .4rem; }
 
@@ -124,7 +124,7 @@ a { color: inherit; }
 }
 .vista:hover { background: var(--hover); color: var(--tinta); }
 .vista span { font-size: var(--t-nota); color: var(--suave); }
-.vista[aria-pressed="true"] { color: var(--tinta); font-weight: 700; }
+.vista[aria-pressed="true"] { color: var(--tinta); font-weight: 600; }
 .vista[aria-pressed="true"]::after { content: ""; position: absolute; left: .4rem; right: .4rem; bottom: -.55rem; height: 2px; background: var(--tinta); }
 
 .db-herramientas { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 1.25rem; }
@@ -151,12 +151,12 @@ a { color: inherit; }
 .foto { aspect-ratio: 4 / 3; overflow: hidden; background: var(--capa); border-bottom: 1px solid var(--linea); }
 .foto img { width: 100%; height: 100%; object-fit: cover; transition: scale .3s; }
 .cuerpo { padding: .8rem .9rem 1rem; display: flex; flex-direction: column; align-items: center; gap: .45rem; flex: 1; }
-.tarjeta h3 { font-size: var(--t-pieza); line-height: 1.25; }
-.precio { margin: 0; font-size: 1.05rem; }
-.precio small { font-style: italic; color: var(--tenue); font-size: var(--t-nota); margin-right: .25rem; }
+.tarjeta h3 { font-size: var(--t-pieza); font-weight: 600; line-height: 1.25; }
+.precio { margin: 0; font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.precio small { font-weight: 400; color: var(--tenue); font-size: var(--t-nota); margin-right: .25rem; }
 .etiquetas { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: center; }
-.tag { display: inline-block; font-size: .9rem; line-height: 1.2; padding: .15rem .45rem; border-radius: 3px; background: #E3E2E0; color: #32302C; white-space: nowrap; }
-.entrega { margin: auto 0 0; font-size: var(--t-nota); color: var(--tenue); font-style: italic; }
+.tag { display: inline-block; font-size: .82rem; line-height: 1.2; padding: .15rem .45rem; border-radius: 3px; background: #E3E2E0; color: #32302C; white-space: nowrap; }
+.entrega { margin: auto 0 0; font-size: var(--t-nota); color: var(--tenue); }
 
 /* Colores de etiqueta de Notion */
 .c-gris { background: #E3E2E0; color: #32302C; }

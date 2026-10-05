@@ -8,10 +8,13 @@
   <meta name="theme-color" content="#0A1128">
   <link rel="icon" type="image/png" href="marca/favicon.png">
   <link rel="apple-touch-icon" href="marca/icono-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
   <style>
     .barra-interior { gap: 1rem; }
-    .marca-panel { font: italic 400 var(--t-apoyo) var(--texto); color: var(--marino-texto); }
+    .marca-panel { font: 500 var(--t-apoyo) var(--texto); color: var(--marino-texto); }
     @media (max-width: 860px) {
       .barra-interior { grid-template-columns: 1fr; height: auto; padding-block: .6rem; justify-items: center; gap: .5rem; }
       .barra-interior .marca { grid-column: 1; }
@@ -19,7 +22,7 @@
       .marca-panel { display: none; }
     }
     .acciones { display: flex; align-items: center; gap: .6rem; }
-    .estado { font-size: var(--t-nota); font-style: italic; color: var(--tenue); }
+    .estado { font-size: var(--t-nota); color: var(--tenue); }
     .barra .estado { color: var(--marino-texto); }
     .barra .estado.pendiente { color: #FFC56B; }
     .btn:disabled { opacity: .45; cursor: not-allowed; }
@@ -40,7 +43,7 @@
     .conectar code { color: var(--tinta); }
 
     .campo { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; min-width: 0; }
-    .campo > span { font-size: var(--t-apoyo); font-style: italic; color: var(--tenue); }
+    .campo > span { font-size: .92rem; font-weight: 500; color: var(--tenue); }
     .campo input[type=text], .campo input[type=number], .campo input[type=password], .campo input[type=search], .campo select, .campo textarea, .entrada {
       font: 400 var(--t-cuerpo) var(--texto); color: var(--tinta);
       background: var(--fondo); border: 1px solid var(--linea); border-radius: var(--radio);
@@ -72,8 +75,8 @@
     .lista li button:hover { background: var(--panel-alto); }
     .lista li button[aria-current=true] { background: rgba(31,111,224,.08); box-shadow: inset 3px 0 var(--azul); }
     .lista img { width: 46px; height: 46px; object-fit: cover; border-radius: 4px; background: var(--capa); }
-    .lista strong { display: block; font-weight: 700; font-size: 1.02rem; line-height: 1.25; }
-    .lista small { color: var(--tenue); font-size: var(--t-nota); font-style: italic; }
+    .lista strong { display: block; font-weight: 600; font-size: 1.02rem; line-height: 1.25; }
+    .lista small { color: var(--tenue); font-size: var(--t-nota); }
     .marca-chica { font-size: .78rem; font-weight: 700; border-radius: 3px; padding: .05rem .35rem; margin-left: .3rem; }
     .marca-chica.oculto { background: #E3E8EF; color: var(--tenue); }
     .marca-chica.nuevo { background: #FFC56B; color: #1A1206; }
@@ -81,7 +84,7 @@
     .formulario { background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; padding: 1.5rem; }
     .formulario h2 { font-size: var(--t-seccion); margin-bottom: 1.2rem; }
     .grupo { border: 0; padding: 0; margin: 0 0 1rem; }
-    .grupo legend { font-size: var(--t-apoyo); font-style: italic; color: var(--tenue); margin-bottom: .45rem; padding: 0; }
+    .grupo legend { font-size: .92rem; font-weight: 500; color: var(--tenue); margin-bottom: .45rem; padding: 0; }
     .chips label { cursor: pointer; }
 
     .fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .75rem; }
@@ -89,7 +92,7 @@
     .foto-item img { width: 100%; aspect-ratio: 1; object-fit: cover; }
     .foto-item div { display: flex; gap: .3rem; padding: .4rem; }
     .foto-item button { flex: 1; font: 400 .85rem var(--texto); background: var(--panel-alto); color: var(--tinta); border: 1px solid var(--linea); border-radius: 4px; padding: .35rem; cursor: pointer; }
-    .foto-item .portada { font-size: .85rem; font-style: italic; color: var(--azul); padding: .35rem; text-align: center; flex: 1; }
+    .foto-item .portada { font-size: .85rem; font-weight: 500; color: var(--azul); padding: .35rem; text-align: center; flex: 1; }
     .subir {
       display: grid; place-items: center; text-align: center; gap: .3rem;
       border: 1px dashed var(--linea); border-radius: 6px; min-height: 130px; cursor: pointer; color: var(--tenue); font-size: var(--t-apoyo); padding: .5rem; position: relative;
@@ -133,11 +136,11 @@
     .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: 1.5rem 0; border: 1px solid var(--linea); border-radius: 8px; }
     .cifras > div { padding: 1.1rem 1.25rem; border-left: 1px solid var(--linea); }
     .cifras > div:first-child { border-left: 0; }
-    .cifra { display: block; font: 700 2.6rem/1 var(--display); }
-    .cifra-nombre { display: block; margin-top: .4rem; color: var(--tenue); font-style: italic; }
+    .cifra { display: block; font: 600 2.4rem/1 var(--display); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+    .cifra-nombre { display: block; margin-top: .4rem; color: var(--tenue); }
     .tabla-visitas-caja { overflow-x: auto; }
     .tabla-visitas { width: 100%; border-collapse: collapse; font-size: var(--t-apoyo); }
-    .tabla-visitas th { text-align: left; font-weight: 400; font-style: italic; color: var(--tenue); padding: .5rem .75rem; border-bottom: 1px solid var(--linea); }
+    .tabla-visitas th { text-align: left; font-weight: 500; color: var(--tenue); padding: .5rem .75rem; border-bottom: 1px solid var(--linea); }
     .tabla-visitas td { padding: .6rem .75rem; border-bottom: 1px solid var(--linea); }
     .tabla-visitas th:not(:first-child), .tabla-visitas td:not(:first-child) { text-align: right; width: 6rem; font-variant-numeric: tabular-nums; }
     .tabla-visitas .barra-v { display: block; height: 3px; margin-top: .35rem; background: var(--azul); border-radius: 2px; }
