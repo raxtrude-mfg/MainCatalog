@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel del catálogo | RA Xtrude</title>
+  <meta name="theme-color" content="#0F1C2E">
+  <link rel="icon" type="image/png" href="marca/favicon.png">
+  <link rel="apple-touch-icon" href="marca/icono-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    .barra-interior { gap: 1rem; }
+    .marca-panel { font: 600 .85rem var(--display); color: var(--tenue); border-left: 1px solid var(--linea); padding-left: .7rem; }
+    @media (max-width: 860px) { .marca-panel { display: none; } }
+    .acciones { display: flex; align-items: center; gap: .6rem; }
+    .estado { font-size: .85rem; color: var(--tenue); }
+    .estado.pendiente { color: #FFC56B; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-peligro { background: transparent; color: #FF8A80; border-color: #6B3A40; }
+    .btn-peligro:hover { background: rgba(255, 138, 128, .1); }
+    .btn-chico { padding: .45rem .7rem; font-size: .82rem; }
+
+    main.envoltura { padding-block: 1.5rem 4rem; }
+    .panel { background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; padding: 1.5rem; }
+    .panel h2 { font-size: 1.35rem; margin-bottom: .6rem; }
+    .panel + .panel { margin-top: 1.25rem; }
+    .ayuda { color: var(--tenue); font-size: .9rem; margin: .25rem 0 0; }
+    .ayuda a { color: var(--azul); }
+
+    .conectar { max-width: 560px; margin: 2rem auto; }
+    .conectar ol { color: var(--tenue); font-size: .92rem; padding-left: 1.2rem; margin: .5rem 0 1.25rem; }
+    .conectar li { margin-bottom: .35rem; }
+    .conectar code { color: var(--blanco); }
+
+    .campo { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1rem; min-width: 0; }
+    .campo > span { font-size: .85rem; color: var(--tenue); }
+    .campo input[type=text], .campo input[type=number], .campo input[type=password], .campo input[type=search], .campo select, .campo textarea, .entrada {
+      font: 400 .98rem var(--texto); color: var(--blanco);
+      background: var(--fondo); border: 1px solid var(--linea); border-radius: var(--radio);
+      padding: .7rem .8rem; width: 100%;
+    }
+    .campo textarea { min-height: 90px; resize: vertical; }
+    .campo input:focus, .campo select:focus, .campo textarea:focus, .entrada:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgba(76,154,255,.25); }
+    .campo input[readonly] { color: var(--tenue); }
+    .fila { display: grid; gap: 0 1rem; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .casilla { display: flex; align-items: center; gap: .55rem; margin-bottom: .6rem; cursor: pointer; }
+    .casilla input { width: 18px; height: 18px; accent-color: var(--azul); }
+
+    .pestanas { display: flex; gap: .4rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--linea); }
+    .pestanas button {
+      font: 600 .95rem var(--texto); color: var(--tenue); background: none; border: 0;
+      padding: .75rem 1rem; border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -1px;
+    }
+    .pestanas button[aria-selected=true] { color: var(--blanco); border-bottom-color: var(--azul); }
+
+    .dos-columnas { display: grid; grid-template-columns: 320px 1fr; gap: 1.25rem; align-items: start; }
+    .lista { position: sticky; top: 96px; background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; }
+    .lista-cabeza { display: grid; gap: .6rem; padding: .9rem; border-bottom: 1px solid var(--linea); }
+    .lista ul { list-style: none; margin: 0; padding: 0; max-height: calc(100vh - 260px); overflow-y: auto; }
+    .lista li + li { border-top: 1px solid var(--linea); }
+    .lista li button {
+      width: 100%; display: grid; grid-template-columns: 46px 1fr; gap: .7rem; align-items: center;
+      background: none; border: 0; color: var(--blanco); text-align: left; padding: .6rem .9rem; cursor: pointer; font: inherit;
+    }
+    .lista li button:hover { background: var(--panel-alto); }
+    .lista li button[aria-current=true] { background: rgba(76,154,255,.14); box-shadow: inset 3px 0 var(--azul); }
+    .lista img { width: 46px; height: 46px; object-fit: cover; border-radius: 4px; background: var(--capa); }
+    .lista strong { display: block; font-weight: 500; font-size: .93rem; line-height: 1.3; }
+    .lista small { color: var(--tenue); font-size: .78rem; }
+    .marca-chica { font-size: .7rem; font-weight: 600; border-radius: 3px; padding: .05rem .35rem; margin-left: .3rem; }
+    .marca-chica.oculto { background: #3A4A5E; color: var(--tenue); }
+    .marca-chica.nuevo { background: #FFC56B; color: #1A1206; }
+
+    .formulario { background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; padding: 1.5rem; }
+    .formulario h2 { font-size: 1.4rem; margin-bottom: 1.2rem; }
+    .grupo { border: 0; padding: 0; margin: 0 0 1rem; }
+    .grupo legend { font-size: .85rem; color: var(--tenue); margin-bottom: .45rem; padding: 0; }
+    .chips label { cursor: pointer; }
+
+    .fotos { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .75rem; }
+    .foto-item { border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; background: var(--fondo); }
+    .foto-item img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .foto-item div { display: flex; gap: .3rem; padding: .4rem; }
+    .foto-item button { flex: 1; font: 500 .75rem var(--texto); background: var(--panel-alto); color: var(--blanco); border: 1px solid var(--linea); border-radius: 4px; padding: .35rem; cursor: pointer; }
+    .foto-item .portada { font-size: .75rem; color: var(--azul); padding: .35rem; text-align: center; flex: 1; }
+    .subir {
+      display: grid; place-items: center; text-align: center; gap: .3rem;
+      border: 1px dashed var(--linea); border-radius: 6px; min-height: 130px; cursor: pointer; position: relative; color: var(--tenue); font-size: .85rem; padding: .5rem;
+    }
+    .subir:hover { border-color: var(--azul); color: var(--blanco); }
+    .subir input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .subir svg { display: block; width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
+    .pie-form { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-top: 1px solid var(--linea); padding-top: 1.2rem; margin-top: .5rem; }
+
+    .tabla-ajustes { display: grid; gap: .5rem; margin-bottom: 1rem; }
+    .renglon { display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center; }
+    .renglon.mat { grid-template-columns: 120px 1fr auto; }
+    .renglon .botones { display: flex; gap: .3rem; }
+    .renglon code { font-size: .78rem; color: var(--tenue); }
+    .agregar { display: grid; grid-template-columns: 1fr auto; gap: .5rem; }
+    .agregar.mat { grid-template-columns: 120px 1fr auto; }
+
+    .aviso {
+      position: fixed; left: 50%; bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); translate: -50% 0; z-index: 30;
+      background: var(--blanco); color: var(--fondo); font-weight: 500; font-size: .92rem;
+      padding: .75rem 1.1rem; border-radius: 6px; max-width: calc(100% - 2rem);
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .aviso.visible { opacity: 1; }
+    .aviso.error { background: #FF8A80; }
+    .vacio-form { color: var(--tenue); text-align: center; padding: 3rem 1rem; }
+
+    @media (max-width: 860px) {
+      .dos-columnas { grid-template-columns: 1fr; }
+      .lista { position: static; }
+      .lista ul { max-height: 300px; }
+      .acciones .estado { display: none; }
+      .marca-texto small { display: none; }
+      .renglon.mat, .agregar.mat { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="barra">
+    <div class="envoltura barra-interior">
+      <span class="marca"><img class="marca-logo" src="marca/logo.png" alt="RA Xtrude Manufactura" width="306" height="120"><span class="marca-panel">Panel</span></span>
+      <div class="acciones" id="acciones" hidden>
+        <span class="estado" id="estado"></span>
+        <a class="btn btn-borde btn-chico" id="ver-sitio" href="./" target="_blank" rel="noopener">Ver sitio</a>
+        <button class="btn btn-lleno btn-chico" id="publicar" type="button" disabled>Publicar cambios</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="envoltura">
+    <!-- Conexión -->
+    <section class="panel conectar" id="conectar">
+      <h2>Conectar con GitHub</h2>
+      <p class="ayuda">El panel guarda tus cambios directo en tu repositorio. Necesitas una llave de acceso (token) que se crea una sola vez:</p>
+      <ol>
+        <li>En GitHub: tu foto → <b>Settings</b> → <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
+        <li>En <b>Repository access</b> elige <b>Only select repositories</b> y marca tu repositorio del catálogo.</li>
+        <li>En <b>Permissions → Repository permissions → Contents</b> elige <b>Read and write</b>.</li>
+        <li>Genera el token, cópialo y pégalo aquí abajo.</li>
+      </ol>
+      <div class="fila">
+        <label class="campo"><span>Usuario de GitHub</span><input type="text" id="c-owner" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+        <label class="campo"><span>Repositorio</span><input type="text" id="c-repo" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      </div>
+      <label class="campo"><span>Token</span><input type="password" id="c-token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+      <label class="casilla"><input type="checkbox" id="c-recordar" checked> Recordar en este dispositivo</label>
+      <button class="btn btn-lleno btn-ancho" id="c-conectar" type="button">Conectar</button>
+      <p class="ayuda" style="margin-top:.8rem">El token se guarda solo en este navegador. No lo compartas: quien lo tenga puede editar tu catálogo.</p>
+    </section>
+
+    <!-- Editor -->
+    <section id="editor" hidden>
+      <div class="pestanas" role="tablist">
+        <button type="button" role="tab" data-vista="modelos" aria-selected="true">Modelos</button>
+        <button type="button" role="tab" data-vista="ajustes" aria-selected="false">Categorías y datos</button>
+      </div>
+
+      <div id="vista-modelos" class="dos-columnas">
+        <aside class="lista">
+          <div class="lista-cabeza">
+            <button class="btn btn-lleno" id="nuevo" type="button">Agregar modelo</button>
+            <label class="campo" style="margin:0"><span class="solo-lector">Buscar modelo</span><input type="search" id="filtro" placeholder="Buscar modelo"></label>
+          </div>
+          <ul id="lista-modelos"></ul>
+        </aside>
+        <section class="formulario" id="formulario"></section>
+      </div>
+
+      <div id="vista-ajustes" hidden>
+        <section class="panel">
+          <h2>Datos del negocio</h2>
+          <div class="fila">
+            <label class="campo"><span>Nombre</span><input type="text" data-negocio="nombre"></label>
+            <label class="campo"><span>Ciudad</span><input type="text" data-negocio="ciudad"></label>
+          </div>
+          <label class="campo"><span>WhatsApp (52 + 1 + 10 dígitos, sin espacios)</span><input type="text" data-negocio="whatsapp" inputmode="numeric"></label>
+          <div class="fila">
+            <label class="campo"><span>Instagram (liga completa, opcional)</span><input type="text" data-negocio="instagram"></label>
+            <label class="campo"><span>Facebook (liga completa, opcional)</span><input type="text" data-negocio="facebook"></label>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Categorías</h2>
+          <p class="ayuda" style="margin-bottom:1rem">El orden de esta lista es el orden en el sitio. Solo puedes borrar categorías sin modelos.</p>
+          <div class="tabla-ajustes" id="tabla-categorias"></div>
+          <div class="agregar">
+            <input class="entrada" type="text" id="nueva-cat" placeholder="Nueva categoría, ej. Mascotas">
+            <button class="btn btn-borde" type="button" id="agregar-cat">Agregar</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Materiales</h2>
+          <p class="ayuda" style="margin-bottom:1rem">La descripción es lo que ve el cliente al elegir material.</p>
+          <div class="tabla-ajustes" id="tabla-materiales"></div>
+          <div class="agregar mat">
+            <input class="entrada" type="text" id="nuevo-mat" placeholder="Nombre, ej. ABS">
+            <input class="entrada" type="text" id="nuevo-mat-desc" placeholder="Descripción corta">
+            <button class="btn btn-borde" type="button" id="agregar-mat">Agregar</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Sesión</h2>
+          <p class="ayuda" style="margin-bottom:1rem" id="info-repo"></p>
+          <button class="btn btn-peligro" type="button" id="salir">Cerrar sesión y olvidar token</button>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const slug = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  const ARCHIVO = "modelos.js";
+  const LLAVE = "raxtrude-panel";
+
+  let cfg = null;          // { owner, repo, token, branch }
+  let datos = null;        // window.CATALOGO
+  let sha = null;          // versión de modelos.js en GitHub
+  let guardado = "";       // datos tal como están publicados
+  let actual = null;       // modelo seleccionado
+  const nuevos = new WeakSet();
+  const idManual = new WeakSet();
+  const fotosLocales = {}; // ruta -> URL local (fotos recién subidas que el sitio aún no publica)
+
+  /* ---------- Avisos ---------- */
+  let tAviso;
+  function avisar(texto, error) {
+    const a = $("#aviso");
+    a.textContent = texto;
+    a.className = "aviso visible" + (error ? " error" : "");
+    clearTimeout(tAviso);
+    tAviso = setTimeout(() => (a.className = "aviso"), error ? 6000 : 3000);
+  }
+
+  /* ---------- GitHub API ---------- */
+  async function gh(metodo, ruta, cuerpo) {
+    const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}${ruta ? "/" + ruta : ""}`;
+    const r = await fetch(url, {
+      method: metodo,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${cfg.token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(cuerpo ? { "Content-Type": "application/json" } : {})
+      },
+      body: cuerpo ? JSON.stringify(cuerpo) : undefined
+    });
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({}));
+      const msj = {
+        401: "El token no es válido o ya venció.",
+        403: "El token no tiene permiso de escritura (Contents: Read and write).",
+        404: "No encontré el repositorio o el archivo. Revisa usuario, repositorio y que el token tenga acceso a ese repositorio.",
+        409: "El archivo cambió en GitHub desde que lo abriste. Recarga la página.",
+        422: "GitHub rechazó el cambio: " + (e.message || "datos inválidos.")
+      }[r.status] || `Error de GitHub (${r.status}): ${e.message || "desconocido"}`;
+      throw new Error(msj);
+    }
+    return r.status === 204 ? null : r.json();
+  }
+  const texto64 = (s) => { const b = new TextEncoder().encode(s); let bin = ""; for (let i = 0; i < b.length; i += 8192) bin += String.fromCharCode(...b.subarray(i, i + 8192)); return btoa(bin); };
+  const deTexto64 = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+  const blob64 = (blob) => new Promise((ok, mal) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = mal; r.readAsDataURL(blob); });
+
+  /* ---------- Conexión ---------- */
+  function sugerirRepo() {
+    const h = location.hostname;
+    if (h.endsWith(".github.io")) {
+      const owner = h.split(".")[0];
+      const seg = location.pathname.split("/").filter(Boolean)[0];
+      const repo = seg && !seg.endsWith(".html") ? seg : `${owner}.github.io`;
+      return { owner, repo };
+    }
+    return { owner: "", repo: "catalogo" };
+  }
+
+  async function conectar(c, silencioso) {
+    cfg = c;
+    try {
+      const repo = await gh("GET", "");
+      if (repo.permissions && !repo.permissions.push) throw new Error("El token puede leer pero no escribir. Dale permiso Contents: Read and write.");
+      cfg.branch = repo.default_branch;
+      const arch = await gh("GET", `contents/${ARCHIVO}?ref=${encodeURIComponent(cfg.branch)}`);
+      sha = arch.sha;
+      const codigo = deTexto64(arch.content);
+      const ventana = {};
+      new Function("window", codigo)(ventana);
+      if (!ventana.CATALOGO) throw new Error("modelos.js no tiene el formato esperado (window.CATALOGO).");
+      datos = ventana.CATALOGO;
+      datos.categorias ||= [];
+      datos.materiales ||= {};
+      datos.modelos ||= [];
+      datos.negocio ||= {};
+      datos.modelos.forEach((m) => { m.imagenes ||= []; m.materiales ||= []; m.colores ||= []; });
+      guardado = JSON.stringify(datos);
+      if ($("#c-recordar").checked) localStorage.setItem(LLAVE, JSON.stringify({ owner: cfg.owner, repo: cfg.repo, token: cfg.token }));
+      iniciarEditor();
+    } catch (e) {
+      cfg = null;
+      $("#conectar").hidden = false;
+      if (!silencioso) avisar(e.message, true);
+      else avisar("No pude reconectar: " + e.message, true);
+    }
+  }
+
+  $("#c-conectar").addEventListener("click", async () => {
+    const c = { owner: $("#c-owner").value.trim(), repo: $("#c-repo").value.trim(), token: $("#c-token").value.trim() };
+    if (!c.owner || !c.repo || !c.token) return avisar("Llena usuario, repositorio y token.", true);
+    const b = $("#c-conectar");
+    b.disabled = true; b.textContent = "Conectando…";
+    await conectar(c);
+    b.disabled = false; b.textContent = "Conectar";
+  });
+
+  $("#salir").addEventListener("click", () => {
+    if (hayCambios() && !confirm("Tienes cambios sin publicar. ¿Salir de todos modos?")) return;
+    localStorage.removeItem(LLAVE);
+    guardado = JSON.stringify(datos); // evita el aviso al recargar
+    location.reload();
+  });
+
+  /* ---------- Estado de cambios ---------- */
+  const hayCambios = () => datos && JSON.stringify(datos) !== guardado;
+  function marcar() {
+    const c = hayCambios();
+    $("#publicar").disabled = !c;
+    const e = $("#estado");
+    e.textContent = c ? "Cambios sin publicar" : "Todo publicado";
+    e.className = "estado" + (c ? " pendiente" : "");
+  }
+  window.addEventListener("beforeunload", (e) => { if (hayCambios()) { e.preventDefault(); e.returnValue = ""; } });
+
+  /* ---------- Editor ---------- */
+  function iniciarEditor() {
+    $("#conectar").hidden = true;
+    $("#editor").hidden = false;
+    $("#acciones").hidden = false;
+    $("#info-repo").textContent = `Conectado a ${cfg.owner}/${cfg.repo} (rama ${cfg.branch}).`;
+    actual = datos.modelos[0] || null;
+    pintarLista();
+    pintarFormulario();
+    pintarAjustes();
+    marcar();
+  }
+
+  document.querySelector(".pestanas").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-vista]");
+    if (!b) return;
+    document.querySelectorAll(".pestanas button").forEach((x) => x.setAttribute("aria-selected", x === b));
+    $("#vista-modelos").hidden = b.dataset.vista !== "modelos";
+    $("#vista-ajustes").hidden = b.dataset.vista !== "ajustes";
+    if (b.dataset.vista === "modelos") { pintarLista(); pintarFormulario(); }
+    else pintarAjustes();
+  });
+
+  const fotoSrc = (ruta) => fotosLocales[ruta] || ruta;
+  const nombreCat = (id) => (datos.categorias.find((c) => c.id === id) || {}).nombre || "Sin categoría";
+
+  /* Lista de modelos */
+  function pintarLista() {
+    const q = slug($("#filtro").value).replace(/-/g, " ");
+    const lista = datos.modelos.filter((m) => !q || slug(m.nombre + " " + nombreCat(m.categoria)).replace(/-/g, " ").includes(q));
+    $("#lista-modelos").innerHTML = lista.length
+      ? lista.map((m) => {
+          const i = datos.modelos.indexOf(m);
+          const portada = m.imagenes[0] ? `<img src="${esc(fotoSrc(m.imagenes[0]))}" alt="">` : `<img alt="">`;
+          return `<li><button type="button" data-i="${i}" aria-current="${m === actual}">${portada}
+            <span><strong>${esc(m.nombre || "Sin nombre")}${m.disponible === false ? '<span class="marca-chica oculto">Oculto</span>' : ""}${nuevos.has(m) ? '<span class="marca-chica nuevo">Nuevo</span>' : ""}</strong>
+            <small>${esc(nombreCat(m.categoria))}${m.precioDesde ? " · $" + esc(m.precioDesde) : ""}</small></span></button></li>`;
+        }).join("")
+      : `<li class="vacio-form" style="padding:1.5rem">Sin resultados</li>`;
+  }
+  $("#lista-modelos").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-i]");
+    if (!b) return;
+    actual = datos.modelos[Number(b.dataset.i)];
+    pintarLista();
+    pintarFormulario();
+    if (innerWidth < 860) $("#formulario").scrollIntoView({ behavior: "smooth" });
+  });
+  $("#filtro").addEventListener("input", pintarLista);
+
+  $("#nuevo").addEventListener("click", () => {
+    const m = {
+      id: "", nombre: "", categoria: (datos.categorias[0] || {}).id || "",
+      descripcion: "", imagenes: [], precioDesde: null, medidas: "", entrega: "2–3 días",
+      materiales: [], colores: [], destacado: false, disponible: true
+    };
+    datos.modelos.unshift(m);
+    nuevos.add(m);
+    actual = m;
+    $("#filtro").value = "";
+    pintarLista();
+    pintarFormulario();
+    marcar();
+    $("#f-nombre").focus();
+  });
+
+  /* Formulario del modelo */
+  function pintarFormulario() {
+    const f = $("#formulario");
+    const m = actual;
+    if (!m) { f.innerHTML = `<p class="vacio-form">Elige un modelo de la lista o agrega uno nuevo.</p>`; return; }
+    const esNuevo = nuevos.has(m);
+    const mats = Object.keys(datos.materiales);
+    f.innerHTML = `
+      <h2>${esNuevo ? "Nuevo modelo" : "Editar modelo"}</h2>
+      <label class="campo"><span>Nombre</span><input type="text" id="f-nombre" data-campo="nombre" value="${esc(m.nombre)}" placeholder="Ej. Maceta con autorriego"></label>
+      <div class="fila">
+        <label class="campo"><span>Categoría</span><select data-campo="categoria">
+          ${datos.categorias.map((c) => `<option value="${esc(c.id)}" ${c.id === m.categoria ? "selected" : ""}>${esc(c.nombre)}</option>`).join("")}
+        </select></label>
+        <label class="campo"><span>Precio desde (MXN)</span><input type="number" min="0" step="10" inputmode="numeric" data-campo="precioDesde" value="${m.precioDesde ?? ""}"></label>
+      </div>
+      <label class="campo"><span>Descripción</span><textarea data-campo="descripcion" placeholder="Para qué sirve y qué la hace buena, en 1 a 3 frases.">${esc(m.descripcion)}</textarea></label>
+      <div class="fila">
+        <label class="campo"><span>Medidas</span><input type="text" data-campo="medidas" value="${esc(m.medidas)}" placeholder="120 × 80 × 40 mm"></label>
+        <label class="campo"><span>Tiempo de entrega</span><input type="text" data-campo="entrega" value="${esc(m.entrega)}" placeholder="2–3 días"></label>
+      </div>
+      <fieldset class="grupo"><legend>Materiales disponibles</legend>
+        <div class="chips">${mats.map((x) => `<label><input type="checkbox" data-material value="${esc(x)}" ${m.materiales.includes(x) ? "checked" : ""}><span>${esc(x)}</span></label>`).join("")}</div>
+      </fieldset>
+      <label class="campo"><span>Colores (separados por coma)</span><input type="text" data-campo="colores" value="${esc(m.colores.join(", "))}" placeholder="Negro, Blanco, Azul"></label>
+      <fieldset class="grupo"><legend>Fotos (la primera es la portada)</legend>
+        <div class="fotos" id="fotos">
+          ${m.imagenes.map((r, i) => `<div class="foto-item"><img src="${esc(fotoSrc(r))}" alt="Foto ${i + 1}" loading="lazy"><div>
+            ${i === 0 ? `<span class="portada">Portada</span>` : `<button type="button" data-portada="${i}">Portada</button>`}
+            <button type="button" data-quitar="${i}">Quitar</button></div></div>`).join("")}
+          <label class="subir"><input type="file" accept="image/*" multiple id="f-fotos">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>
+            <span id="f-subir-texto">Subir fotos</span></label>
+        </div>
+      </fieldset>
+      <label class="casilla"><input type="checkbox" data-campo="disponible" ${m.disponible !== false ? "checked" : ""}> Mostrar en el catálogo</label>
+      <label class="casilla"><input type="checkbox" data-campo="destacado" ${m.destacado ? "checked" : ""}> Marcar como "Más pedido" (aparece primero)</label>
+      <label class="campo" style="margin-top:.6rem"><span>Identificador para el enlace${esNuevo ? "" : " (no se puede cambiar)"}</span>
+        <input type="text" data-campo="id" value="${esc(m.id)}" ${esNuevo ? "" : "readonly"} autocapitalize="off" spellcheck="false">
+        <span class="ayuda" id="f-enlace">…/#modelo=${esc(m.id)}</span></label>
+      <div class="pie-form">
+        <button class="btn btn-peligro" type="button" id="f-eliminar">Eliminar modelo</button>
+        <a class="btn btn-borde" href="./#modelo=${encodeURIComponent(m.id)}" target="_blank" rel="noopener" ${esNuevo ? "hidden" : ""}>Ver en el sitio</a>
+      </div>`;
+  }
+
+  $("#formulario").addEventListener("input", (e) => {
+    const m = actual;
+    const el = e.target;
+    if (!m) return;
+    if (el.dataset.material !== undefined) {
+      m.materiales = [...document.querySelectorAll("[data-material]:checked")].map((x) => x.value);
+    } else if (el.dataset.campo) {
+      const k = el.dataset.campo;
+      if (el.type === "checkbox") {
+        if (k === "destacado") { if (el.checked) m.destacado = true; else delete m.destacado; }
+        if (k === "disponible") { if (el.checked) delete m.disponible; else m.disponible = false; }
+      } else if (k === "precioDesde") m.precioDesde = el.value === "" ? null : Number(el.value);
+      else if (k === "colores") m.colores = el.value.split(",").map((s) => s.trim()).filter(Boolean);
+      else if (k === "id") { m.id = slug(el.value); idManual.add(m); $("#f-enlace").textContent = `…/#modelo=${m.id}`; }
+      else m[k] = el.value;
+
+      if (k === "nombre" && nuevos.has(m) && !idManual.has(m)) {
+        m.id = idUnico(slug(m.nombre), m);
+        const campoId = document.querySelector('[data-campo="id"]');
+        if (campoId) campoId.value = m.id;
+        $("#f-enlace").textContent = `…/#modelo=${m.id}`;
+      }
+    }
+    if (["nombre", "categoria", "precioDesde", "disponible"].includes(el.dataset.campo)) pintarLista();
+    marcar();
+  });
+  // "change" cubre selects y checkboxes en navegadores que no disparan input
+  $("#formulario").addEventListener("change", (e) => {
+    if (e.target.tagName === "SELECT" || e.target.type === "checkbox") e.target.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+
+  function idUnico(base, propio) {
+    base = base || "modelo";
+    let id = base, n = 2;
+    while (datos.modelos.some((x) => x !== propio && x.id === id)) id = `${base}-${n++}`;
+    return id;
+  }
+
+  $("#formulario").addEventListener("click", async (e) => {
+    const m = actual;
+    const p = e.target.closest("[data-portada]");
+    const q = e.target.closest("[data-quitar]");
+    if (p) {
+      const i = Number(p.dataset.portada);
+      m.imagenes.unshift(m.imagenes.splice(i, 1)[0]);
+      pintarFormulario(); pintarLista(); marcar();
+    }
+    if (q) {
+      m.imagenes.splice(Number(q.dataset.quitar), 1);
+      pintarFormulario(); pintarLista(); marcar();
+    }
+    if (e.target.id === "f-eliminar") {
+      if (!confirm(`¿Eliminar "${m.nombre || "este modelo"}"? Se quita del catálogo al publicar.`)) return;
+      datos.modelos.splice(datos.modelos.indexOf(m), 1);
+      actual = datos.modelos[0] || null;
+      pintarLista(); pintarFormulario(); marcar();
+    }
+  });
+
+  /* Fotos: se reducen a 1200 px y se suben de inmediato a /imagenes */
+  async function reducir(archivo) {
+    let fuente;
+    try { fuente = await createImageBitmap(archivo, { imageOrientation: "from-image" }); }
+    catch {
+      fuente = await new Promise((ok, mal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => mal(new Error(`No pude leer ${archivo.name}. Usa JPG o PNG.`)); i.src = URL.createObjectURL(archivo); });
+    }
+    const max = 1200;
+    const w = fuente.width, h = fuente.height;
+    const k = Math.min(1, max / Math.max(w, h));
+    const lienzo = document.createElement("canvas");
+    lienzo.width = Math.round(w * k); lienzo.height = Math.round(h * k);
+    lienzo.getContext("2d").drawImage(fuente, 0, 0, lienzo.width, lienzo.height);
+    const aBlob = (tipo, cal) => new Promise((ok) => lienzo.toBlob(ok, tipo, cal));
+    let blob = await aBlob("image/webp", 0.8);
+    if (!blob || blob.type !== "image/webp") blob = await aBlob("image/jpeg", 0.85);
+    return { blob, ext: blob.type === "image/webp" ? "webp" : "jpg" };
+  }
+
+  $("#formulario").addEventListener("change", async (e) => {
+    if (e.target.id !== "f-fotos") return;
+    const m = actual;
+    const archivos = [...e.target.files];
+    if (!archivos.length) return;
+    if (!m.id) { avisar("Primero escribe el nombre del modelo.", true); e.target.value = ""; return; }
+    const texto = $("#f-subir-texto");
+    let hechas = 0;
+    for (const a of archivos) {
+      texto.textContent = `Subiendo ${hechas + 1} de ${archivos.length}…`;
+      try {
+        const { blob, ext } = await reducir(a);
+        const ruta = `imagenes/${m.id}-${Date.now().toString(36)}.${ext}`;
+        await gh("PUT", `contents/${ruta}`, { message: `Foto: ${m.nombre || m.id}`, content: await blob64(blob), branch: cfg.branch });
+        fotosLocales[ruta] = URL.createObjectURL(blob);
+        m.imagenes.push(ruta);
+        hechas++;
+      } catch (err) {
+        avisar(err.message, true);
+        break;
+      }
+    }
+    pintarFormulario(); pintarLista(); marcar();
+    if (hechas) avisar(`${hechas} foto${hechas > 1 ? "s" : ""} subida${hechas > 1 ? "s" : ""}. Publica los cambios para que aparezcan en el sitio.`);
+  });
+
+  /* ---------- Ajustes ---------- */
+  function pintarAjustes() {
+    document.querySelectorAll("[data-negocio]").forEach((el) => (el.value = datos.negocio[el.dataset.negocio] || ""));
+    const usados = (id) => datos.modelos.filter((m) => m.categoria === id).length;
+    $("#tabla-categorias").innerHTML = datos.categorias.map((c, i) => `
+      <div class="renglon">
+        <label class="campo" style="margin:0"><span class="solo-lector">Nombre de la categoría</span>
+          <input type="text" data-cat-nombre="${i}" value="${esc(c.nombre)}"></label>
+        <div class="botones">
+          <button class="btn btn-borde btn-chico" type="button" data-cat-subir="${i}" ${i === 0 ? "disabled" : ""} aria-label="Subir">↑</button>
+          <button class="btn btn-borde btn-chico" type="button" data-cat-bajar="${i}" ${i === datos.categorias.length - 1 ? "disabled" : ""} aria-label="Bajar">↓</button>
+          <button class="btn btn-peligro btn-chico" type="button" data-cat-borrar="${i}" ${usados(c.id) ? `disabled title="Tiene ${usados(c.id)} modelo(s)"` : ""}>Borrar</button>
+        </div>
+      </div>`).join("");
+    const usaMat = (x) => datos.modelos.filter((m) => m.materiales.includes(x)).length;
+    $("#tabla-materiales").innerHTML = Object.entries(datos.materiales).map(([k, v]) => `
+      <div class="renglon mat">
+        <strong style="font-family:var(--display)">${esc(k)}</strong>
+        <label class="campo" style="margin:0"><span class="solo-lector">Descripción de ${esc(k)}</span>
+          <input type="text" data-mat-desc="${esc(k)}" value="${esc(v)}"></label>
+        <div class="botones"><button class="btn btn-peligro btn-chico" type="button" data-mat-borrar="${esc(k)}" ${usaMat(k) ? `disabled title="Lo usan ${usaMat(k)} modelo(s)"` : ""}>Borrar</button></div>
+      </div>`).join("");
+  }
+
+  $("#vista-ajustes").addEventListener("input", (e) => {
+    const el = e.target;
+    if (el.dataset.negocio) datos.negocio[el.dataset.negocio] = el.dataset.negocio === "whatsapp" ? el.value.replace(/\D/g, "") : el.value.trim();
+    if (el.dataset.catNombre !== undefined) datos.categorias[Number(el.dataset.catNombre)].nombre = el.value;
+    if (el.dataset.matDesc !== undefined) datos.materiales[el.dataset.matDesc] = el.value;
+    marcar();
+  });
+
+  $("#vista-ajustes").addEventListener("click", (e) => {
+    const t = e.target.closest("button");
+    if (!t) return;
+    const cats = datos.categorias;
+    if (t.dataset.catSubir) { const i = +t.dataset.catSubir; [cats[i - 1], cats[i]] = [cats[i], cats[i - 1]]; }
+    else if (t.dataset.catBajar) { const i = +t.dataset.catBajar; [cats[i + 1], cats[i]] = [cats[i], cats[i + 1]]; }
+    else if (t.dataset.catBorrar) cats.splice(+t.dataset.catBorrar, 1);
+    else if (t.dataset.matBorrar) delete datos.materiales[t.dataset.matBorrar];
+    else if (t.id === "agregar-cat") {
+      const nombre = $("#nueva-cat").value.trim();
+      if (!nombre) return;
+      let id = slug(nombre) || "categoria", n = 2;
+      while (cats.some((c) => c.id === id)) id = `${slug(nombre)}-${n++}`;
+      cats.push({ id, nombre });
+      $("#nueva-cat").value = "";
+    } else if (t.id === "agregar-mat") {
+      const nombre = $("#nuevo-mat").value.trim();
+      if (!nombre) return;
+      if (datos.materiales[nombre] !== undefined) return avisar("Ese material ya existe.", true);
+      datos.materiales[nombre] = $("#nuevo-mat-desc").value.trim();
+      $("#nuevo-mat").value = ""; $("#nuevo-mat-desc").value = "";
+    } else return;
+    pintarAjustes(); marcar();
+  });
+
+  /* ---------- Publicar ---------- */
+  function validar() {
+    if (!/^\d{12,13}$/.test(datos.negocio.whatsapp || "")) return { msj: "Revisa el número de WhatsApp en Categorías y datos (52 + 1 + 10 dígitos)." };
+    const ids = new Set();
+    for (const m of datos.modelos) {
+      if (!m.nombre || !m.nombre.trim()) return { msj: "Hay un modelo sin nombre.", m };
+      if (!m.id) return { msj: `"${m.nombre}" no tiene identificador.`, m };
+      if (ids.has(m.id)) return { msj: `El identificador "${m.id}" está repetido.`, m };
+      ids.add(m.id);
+      if (!datos.categorias.some((c) => c.id === m.categoria)) return { msj: `"${m.nombre}" no tiene una categoría válida.`, m };
+    }
+    return null;
+  }
+
+  function generarArchivo() {
+    const limpio = JSON.parse(JSON.stringify(datos));
+    limpio.modelos.forEach((m) => { if (m.precioDesde == null) delete m.precioDesde; });
+    return `/* Catálogo RA Xtrude Manufactura.
+   Este archivo lo genera el panel (admin.html). Puedes editarlo a mano,
+   pero el panel lo reescribe completo cada vez que publicas. */
+
+window.CATALOGO = ${JSON.stringify(limpio, null, 2)};
+`;
+  }
+
+  $("#publicar").addEventListener("click", async () => {
+    const error = validar();
+    if (error) {
+      avisar(error.msj, true);
+      if (error.m) {
+        actual = error.m;
+        document.querySelector('[data-vista="modelos"]').click();
+      } else document.querySelector('[data-vista="ajustes"]').click();
+      return;
+    }
+    const b = $("#publicar");
+    b.disabled = true; b.textContent = "Publicando…";
+    try {
+      const r = await gh("PUT", `contents/${ARCHIVO}`, {
+        message: "Actualizar catálogo desde el panel",
+        content: texto64(generarArchivo()),
+        sha,
+        branch: cfg.branch
+      });
+      sha = r.content.sha;
+      guardado = JSON.stringify(datos);
+      datos.modelos.forEach((m) => nuevos.delete(m));
+      avisar("Publicado. El sitio se actualiza en 1 o 2 minutos.");
+      pintarLista(); pintarFormulario();
+    } catch (e) {
+      avisar(e.message, true);
+    }
+    b.textContent = "Publicar cambios";
+    marcar();
+  });
+
+  /* ---------- Arranque ---------- */
+  const s = sugerirRepo();
+  $("#c-owner").value = s.owner;
+  $("#c-repo").value = s.repo;
+  try {
+    const recordado = JSON.parse(localStorage.getItem(LLAVE) || "null");
+    if (recordado && recordado.token) {
+      $("#c-owner").value = recordado.owner; $("#c-repo").value = recordado.repo; $("#c-token").value = recordado.token;
+      $("#conectar").hidden = true;
+      conectar(recordado, true);
+    }
+  } catch { /* sin almacenamiento disponible */ }
+})();
+</script>
+</body>
+</html>
